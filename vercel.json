@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://www.uchat.com.au/api/:path*"
+    },
+    {
+      "source": "/workspace-api/:path*",
+      "destination": "https://chat.talkbi.com.br/api/:path*"
+    }
+  ]
+}
