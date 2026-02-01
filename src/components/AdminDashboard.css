@@ -170,7 +170,7 @@
 
 /* Main Content */
 .admin-content {
-  padding: clamp(1rem, 3vw, 2rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
   max-width: 1800px;
   margin: 0 auto;
 }
@@ -183,7 +183,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: #1e293b;
-  margin: 0;
+  margin: 0 0 1rem 0;
 }
 
 .section-title svg {
@@ -196,12 +196,16 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.section-header .section-title {
+  margin-bottom: 0;
 }
 
 /* Metrics Section */
 .metrics-section {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .metrics-grid {
@@ -267,7 +271,7 @@
 
 /* Alerts Section */
 .alerts-section {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .alerts-grid {
