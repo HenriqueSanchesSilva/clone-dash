@@ -91,6 +91,60 @@ export interface WorkspaceResponse {
   status: string;
 }
 
+// Partner Workspaces Types
+export interface PartnerWorkspace {
+  id: number;
+  name: string;
+  timezone: string;
+  plan: string;
+  created_at: string;
+  trial_ends_at: string | null;
+  bot_user_used: number;
+  bot_user_limit: number;
+  bot_used: number;
+  bot_limit: number;
+  member_used: number;
+  member_limit: number;
+  is_paused: number;
+  auto_renew: number;
+  billing_start_at: string;
+  billing_end_at: string;
+  addon_bot: number;
+  addon_bot_user: number;
+  addon_member: number;
+  addon_lists: number;
+  addon_inbound_webhook: number;
+  addon_timeout: number;
+  flow_addons: unknown[];
+  renew_points: number;
+  sub_whitelabel_id: number;
+  owner_id: number;
+  owner_name: string;
+  owner_email: string;
+  points: number;
+  vat_id: string;
+  extra_billing_information: string;
+}
+
+export interface PartnerWorkspacesResponse {
+  data: PartnerWorkspace[];
+  links: {
+    first: string;
+    last: string;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: {
+    current_page: number;
+    from: number;
+    last_page: number;
+    path: string;
+    per_page: number;
+    to: number;
+    total: number;
+  };
+}
+
 export interface Bot {
   flow_ns: string;
   name: string;
@@ -385,4 +439,57 @@ export function aggregateFlowSummary(summaries: FlowSummary[]) {
       avgResolveTime: 0,
     },
   );
+}
+
+// ==================== Partner Workspaces API ====================
+
+// Fetch a single page of partner workspaces
+export async function getPartnerWorkspaces(
+  page: number = 1,
+  limit: number = 100,
+): Promise<PartnerWorkspacesResponse> {
+  const response = await fetch(
+    `/api/partner/workspaces?page=${page}&limit=${limit}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch partner workspaces: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Fetch ALL partner workspaces (paginated, fetches all pages)
+export async function getAllPartnerWorkspaces(): Promise<PartnerWorkspace[]> {
+  const allWorkspaces: PartnerWorkspace[] = [];
+  let currentPage = 1;
+  let hasMore = true;
+  const limit = 100;
+
+  while (hasMore) {
+    const response = await getPartnerWorkspaces(currentPage, limit);
+    allWorkspaces.push(...response.data);
+
+    // Check if there are more pages
+    if (response.data.length < limit) {
+      hasMore = false;
+    } else {
+      currentPage++;
+    }
+
+    // Safety limit to prevent infinite loops
+    if (currentPage > 100) {
+      console.warn("Reached maximum page limit (100) for partner workspaces");
+      break;
+    }
+  }
+
+  return allWorkspaces;
 }

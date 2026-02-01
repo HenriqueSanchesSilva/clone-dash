@@ -729,7 +729,7 @@ export default function Dashboard({ workspaceId }: DashboardProps) {
                       <XAxis dataKey="date" stroke="#64748b" fontSize={10} tickMargin={5} />
                       <YAxis stroke="#64748b" fontSize={10} width={35} />
                       <Tooltip formatter={(value) => (typeof value === 'number' ? value.toLocaleString('pt-BR') : value)} />
-                      <Legend 
+                      <Legend
                         verticalAlign="bottom"
                         align="center"
                         wrapperStyle={{
@@ -758,7 +758,7 @@ export default function Dashboard({ workspaceId }: DashboardProps) {
                       <XAxis dataKey="date" stroke="#64748b" fontSize={10} tickMargin={5} />
                       <YAxis stroke="#64748b" fontSize={10} width={35} />
                       <Tooltip formatter={(value) => (typeof value === 'number' ? value.toLocaleString('pt-BR') : value)} />
-                      <Legend 
+                      <Legend
                         verticalAlign="bottom"
                         align="center"
                         wrapperStyle={{
