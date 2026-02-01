@@ -493,17 +493,6 @@ export default function Dashboard({ workspaceId }: DashboardProps) {
 
   return (
     <div className="dashboard">
-      {/* Mini Header Bar */}
-      <header className="dashboard-header">
-        <div className="header-content">
-          <span className="header-title">Dashboard</span>
-          <div className="header-workspace">
-            <span className="workspace-name">{ws?.name || 'Workspace'}</span>
-            <span className="plan-badge">{ws?.plan || 'Basic'}</span>
-          </div>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main className="dashboard-content">
         {/* Stats Section */}
