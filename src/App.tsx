@@ -9,6 +9,11 @@ interface DebugInfo {
   expectedSignature: string | null
   receivedSignature: string | null
   rawUrl: string
+  postMessageData: unknown[] 
+  parentOrigin: string | null
+  isInIframe: boolean
+  referrer: string
+  hashParams: string
 }
 
 function App() {
@@ -18,13 +23,39 @@ function App() {
   const [workspaceId, setWorkspaceId] = useState<string | null>(null)
   const [showGenerator, setShowGenerator] = useState(false)
   const [debugInfo, setDebugInfo] = useState<DebugInfo | null>(null)
+  const [postMessages, setPostMessages] = useState<unknown[]>([])
+
+  // Escutar mensagens do parent (iframe communication)
+  useEffect(() => {
+    function handleMessage(event: MessageEvent) {
+      console.log('📨 PostMessage recebido:', event.origin, event.data)
+      setPostMessages(prev => [...prev, { origin: event.origin, data: event.data }])
+    }
+    
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [])
 
   useEffect(() => {
     async function checkAuth() {
       const params = getAuthParams()
-
-      // Se não tem parâmetros na URL, mostra o gerador
+      
+      // Detectar se está em iframe
+      const isInIframe = window.self !== window.top
+      
+      // Se não tem parâmetros na URL, mostra o gerador (mas agora com debug)
       if (!params) {
+        setDebugInfo({
+          params: null,
+          expectedSignature: null,
+          receivedSignature: null,
+          rawUrl: window.location.href,
+          postMessageData: [],
+          parentOrigin: isInIframe ? document.referrer : null,
+          isInIframe,
+          referrer: document.referrer,
+          hashParams: window.location.hash
+        })
         setShowGenerator(true)
         setLoading(false)
         return
@@ -40,7 +71,12 @@ function App() {
         params,
         expectedSignature: result.expectedSignature || null,
         receivedSignature: params.signature,
-        rawUrl: window.location.href
+        rawUrl: window.location.href,
+        postMessageData: [],
+        parentOrigin: isInIframe ? document.referrer : null,
+        isInIframe,
+        referrer: document.referrer,
+        hashParams: window.location.hash
       })
       
       setLoading(false)
@@ -58,9 +94,68 @@ function App() {
     )
   }
 
-  // Se não tem parâmetros, mostra o gerador de teste
+  // Se não tem parâmetros, mostra o gerador de teste COM debug
   if (showGenerator) {
-    return <TestGenerator />
+    return (
+      <div>
+        <TestGenerator />
+        
+        {/* Debug panel para investigar */}
+        <div style={{ 
+          margin: '20px auto',
+          padding: '20px', 
+          backgroundColor: '#1a1a2e', 
+          borderRadius: '8px',
+          maxWidth: '800px',
+          color: '#fff',
+          fontSize: '12px',
+          fontFamily: 'monospace'
+        }}>
+          <h3 style={{ color: '#00ff88', marginTop: 0 }}>🔍 Debug - Investigando comunicação com TalkBI</h3>
+          
+          <p><strong style={{ color: '#ffd700' }}>📍 Está em iframe?</strong> {debugInfo?.isInIframe ? '✅ SIM' : '❌ NÃO'}</p>
+          
+          <p><strong style={{ color: '#ffd700' }}>🔗 URL atual:</strong></p>
+          <div style={{ backgroundColor: '#2d2d44', padding: '10px', borderRadius: '4px', marginBottom: '10px' }}>
+            {debugInfo?.rawUrl || window.location.href}
+          </div>
+          
+          <p><strong style={{ color: '#ffd700' }}>↩️ Referrer (de onde veio):</strong></p>
+          <div style={{ backgroundColor: '#2d2d44', padding: '10px', borderRadius: '4px', marginBottom: '10px' }}>
+            {debugInfo?.referrer || document.referrer || 'Nenhum'}
+          </div>
+          
+          <p><strong style={{ color: '#ffd700' }}># Hash da URL:</strong></p>
+          <div style={{ backgroundColor: '#2d2d44', padding: '10px', borderRadius: '4px', marginBottom: '10px' }}>
+            {debugInfo?.hashParams || window.location.hash || 'Nenhum'}
+          </div>
+          
+          <p><strong style={{ color: '#ffd700' }}>📨 PostMessages recebidos ({postMessages.length}):</strong></p>
+          <div style={{ backgroundColor: '#2d2d44', padding: '10px', borderRadius: '4px', marginBottom: '10px', maxHeight: '150px', overflow: 'auto' }}>
+            {postMessages.length === 0 
+              ? 'Nenhuma mensagem recebida ainda...' 
+              : postMessages.map((msg, i) => (
+                  <div key={i} style={{ marginBottom: '5px', borderBottom: '1px solid #444', paddingBottom: '5px' }}>
+                    {JSON.stringify(msg)}
+                  </div>
+                ))
+            }
+          </div>
+          
+          <p><strong style={{ color: '#ffd700' }}>🍪 Cookies:</strong></p>
+          <div style={{ backgroundColor: '#2d2d44', padding: '10px', borderRadius: '4px', marginBottom: '10px' }}>
+            {document.cookie || 'Nenhum cookie'}
+          </div>
+          
+          <p><strong style={{ color: '#ffd700' }}>💾 LocalStorage keys:</strong></p>
+          <div style={{ backgroundColor: '#2d2d44', padding: '10px', borderRadius: '4px' }}>
+            {Object.keys(localStorage).length > 0 
+              ? Object.keys(localStorage).join(', ') 
+              : 'Nenhum dado no localStorage'}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   // Se autenticado, mostra a Dashboard
@@ -110,12 +205,25 @@ function App() {
           <p><strong>Match:</strong> {debugInfo.expectedSignature === debugInfo.receivedSignature ? '✅ SIM' : '❌ NÃO'}</p>
           
           <p><strong>JSON usado para gerar assinatura:</strong></p>
-          <div style={{ backgroundColor: '#fff3cd', padding: '10px', borderRadius: '4px' }}>
+          <div style={{ backgroundColor: '#fff3cd', padding: '10px', borderRadius: '4px', marginBottom: '15px' }}>
             {debugInfo.params ? JSON.stringify({
               workspace_id: debugInfo.params.workspace_id,
               user_id: debugInfo.params.user_id,
               timestamp: debugInfo.params.timestamp
             }) : 'N/A'}
+          </div>
+          
+          <hr style={{ margin: '15px 0', borderColor: '#ddd' }} />
+          
+          <p><strong>📍 Está em iframe?</strong> {debugInfo.isInIframe ? '✅ SIM' : '❌ NÃO'}</p>
+          <p><strong>↩️ Referrer:</strong> {debugInfo.referrer || 'Nenhum'}</p>
+          
+          <p><strong>📨 PostMessages recebidos ({postMessages.length}):</strong></p>
+          <div style={{ backgroundColor: '#e9ecef', padding: '10px', borderRadius: '4px', maxHeight: '100px', overflow: 'auto' }}>
+            {postMessages.length === 0 
+              ? 'Nenhuma mensagem recebida' 
+              : postMessages.map((msg, i) => <div key={i}>{JSON.stringify(msg)}</div>)
+            }
           </div>
         </div>
       )}
