@@ -874,7 +874,37 @@
 
 .chart-container {
   width: 100%;
-  height: 250px;
+  min-height: 300px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Responsividade do gráfico em mobile */
+@media (max-width: 640px) {
+  .chart-container {
+    min-height: 350px;
+  }
+  
+  .chart-container .recharts-wrapper {
+    font-size: 10px;
+  }
+  
+  .chart-container .recharts-legend-wrapper {
+    position: relative !important;
+    width: 100% !important;
+    margin-top: 10px;
+  }
+  
+  .chart-container .recharts-default-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 16px;
+  }
+  
+  .chart-container .recharts-legend-item {
+    margin: 0 !important;
+  }
 }
 
 .chart-legend {

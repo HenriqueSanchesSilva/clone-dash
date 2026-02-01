@@ -723,13 +723,21 @@ export default function Dashboard({ workspaceId }: DashboardProps) {
               <div className="chart-card">
                 <h3 className="chart-title">Evolução de Mensagens</h3>
                 <div className="chart-container">
-                  <ResponsiveContainer width="100%" height={250}>
-                    <LineChart data={messagesEvolutionData}>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={messagesEvolutionData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                      <XAxis dataKey="date" stroke="#64748b" fontSize={11} />
-                      <YAxis stroke="#64748b" fontSize={11} />
+                      <XAxis dataKey="date" stroke="#64748b" fontSize={10} tickMargin={5} />
+                      <YAxis stroke="#64748b" fontSize={10} width={35} />
                       <Tooltip formatter={(value) => (typeof value === 'number' ? value.toLocaleString('pt-BR') : value)} />
-                      <Legend />
+                      <Legend 
+                        verticalAlign="bottom"
+                        align="center"
+                        wrapperStyle={{
+                          paddingTop: '20px',
+                          fontSize: '12px'
+                        }}
+                        iconSize={12}
+                      />
                       <Line type="monotone" dataKey="recebidas" name="Recebidas" stroke="#3b82f6" strokeWidth={2} dot={false} />
                       <Line type="monotone" dataKey="bot" name="Bot" stroke="#22c55e" strokeWidth={2} dot={false} />
                       <Line type="monotone" dataKey="agentes" name="Agentes" stroke="#f59e0b" strokeWidth={2} dot={false} />
@@ -744,13 +752,22 @@ export default function Dashboard({ workspaceId }: DashboardProps) {
               <div className="chart-card">
                 <h3 className="chart-title">Evolução de Usuários Novos</h3>
                 <div className="chart-container">
-                  <ResponsiveContainer width="100%" height={250}>
-                    <LineChart data={usersEvolutionData.data}>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={usersEvolutionData.data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                      <XAxis dataKey="date" stroke="#64748b" fontSize={11} />
-                      <YAxis stroke="#64748b" fontSize={11} />
+                      <XAxis dataKey="date" stroke="#64748b" fontSize={10} tickMargin={5} />
+                      <YAxis stroke="#64748b" fontSize={10} width={35} />
                       <Tooltip formatter={(value) => (typeof value === 'number' ? value.toLocaleString('pt-BR') : value)} />
-                      <Legend />
+                      <Legend 
+                        verticalAlign="bottom"
+                        align="center"
+                        wrapperStyle={{
+                          paddingTop: '20px',
+                          fontSize: '11px',
+                          lineHeight: '20px'
+                        }}
+                        iconSize={10}
+                      />
                       {usersEvolutionData.botNames.map((botName, index) => (
                         <Line
                           key={botName}
