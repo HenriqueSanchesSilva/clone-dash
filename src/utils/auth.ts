@@ -28,7 +28,7 @@ export function getAuthParams(): AuthParams | null {
 /**
  * Valida a assinatura HMAC-SHA256
  */
-export async function validateSignature(params: AuthParams): Promise<boolean> {
+export async function validateSignature(params: AuthParams): Promise<{ isValid: boolean; expectedSignature: string }> {
   const data = JSON.stringify({
     workspace_id: params.workspace_id,
     user_id: params.user_id,
@@ -54,7 +54,10 @@ export async function validateSignature(params: AuthParams): Promise<boolean> {
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 
-  return params.signature === expectedSignature;
+  return { 
+    isValid: params.signature === expectedSignature,
+    expectedSignature 
+  };
 }
 
 /**
@@ -64,18 +67,20 @@ export async function authenticate(): Promise<{
   isValid: boolean;
   userId: string | null;
   workspaceId: string | null;
+  expectedSignature: string | null;
 }> {
   const params = getAuthParams();
 
   if (!params) {
-    return { isValid: false, userId: null, workspaceId: null };
+    return { isValid: false, userId: null, workspaceId: null, expectedSignature: null };
   }
 
-  const isValid = await validateSignature(params);
+  const { isValid, expectedSignature } = await validateSignature(params);
 
   return {
     isValid,
     userId: isValid ? params.user_id : null,
     workspaceId: isValid ? params.workspace_id : null,
+    expectedSignature,
   };
 }
