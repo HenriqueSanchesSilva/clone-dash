@@ -192,6 +192,8 @@ export default function AdminDashboard() {
             <a
               href="https://chat.talkbi.com.br/settings/accounts/94199#/partner/workspaces"
               className="manage-btn"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <FaExternalLinkAlt />
               Ir para gestão de workspaces

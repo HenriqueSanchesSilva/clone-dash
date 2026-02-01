@@ -512,7 +512,7 @@ export default function Dashboard({ workspaceId }: DashboardProps) {
 
           <div className="stats-grid">
             {/* Bots Card */}
-            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/flows`} className="stat-card clickable">
+            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/flows`} target="_blank" rel="noopener noreferrer" className="stat-card clickable">
               <div className="stat-card-header">
                 <div className="stat-icon bots"><FaRobot /></div>
                 <span className="stat-label">Bots Ativos</span>
@@ -566,35 +566,35 @@ export default function Dashboard({ workspaceId }: DashboardProps) {
           <h2 className="section-title">Canais Conectados</h2>
 
           <div className="channels-grid">
-            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/omni`} className="channel-card">
+            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/omni`} target="_blank" rel="noopener noreferrer" className="channel-card">
               <div className="channel-icon omni"><FaGlobe /></div>
               <div className="channel-name">Omni</div>
               <div className="channel-count">{channelCounts.omni}</div>
               <div className="channel-label">integrados</div>
             </a>
 
-            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/whatsapp-cloud`} className="channel-card">
+            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/whatsapp-cloud`} target="_blank" rel="noopener noreferrer" className="channel-card">
               <div className="channel-icon whatsapp"><FaWhatsapp /></div>
               <div className="channel-name">WhatsApp</div>
               <div className="channel-count">{channelCounts.whatsappCloud}</div>
               <div className="channel-label">bots ativos</div>
             </a>
 
-            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/facebook`} className="channel-card">
+            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/facebook`} target="_blank" rel="noopener noreferrer" className="channel-card">
               <div className="channel-icon facebook"><FaFacebookMessenger /></div>
               <div className="channel-name">Facebook</div>
               <div className="channel-count">{channelCounts.facebook}</div>
               <div className="channel-label">bots ativos</div>
             </a>
 
-            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/instagram`} className="channel-card">
+            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/instagram`} target="_blank" rel="noopener noreferrer" className="channel-card">
               <div className="channel-icon instagram"><FaInstagram /></div>
               <div className="channel-name">Instagram</div>
               <div className="channel-count">{channelCounts.instagram}</div>
               <div className="channel-label">bots ativos</div>
             </a>
 
-            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/telegram`} className="channel-card">
+            <a href={`https://chat.talkbi.com.br/settings/accounts/${workspaceId}#/telegram`} target="_blank" rel="noopener noreferrer" className="channel-card">
               <div className="channel-icon telegram"><FaTelegram /></div>
               <div className="channel-name">Telegram</div>
               <div className="channel-count">{channelCounts.telegram}</div>
