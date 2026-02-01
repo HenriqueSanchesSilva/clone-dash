@@ -304,7 +304,8 @@ export default function Dashboard({ workspaceId }: DashboardProps) {
         // Agregar performance por agente
         if (allAgentSummaries.length > 0) {
           const agentMap = new Map<number, AgentPerformance>();
-          const sortedSummaries = [...allAgentSummaries];
+          // Filtrar agente admin (ID 89031) que não deve aparecer nos relatórios
+          const sortedSummaries = [...allAgentSummaries].filter(agent => agent.agent_id !== 89031);
 
           sortedSummaries.forEach(agent => {
             const existing = agentMap.get(agent.agent_id);
