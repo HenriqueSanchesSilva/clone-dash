@@ -26,6 +26,7 @@ body,
   min-height: 100vh;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 a {
@@ -41,10 +42,11 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  -webkit-text-size-adjust: 100%;
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: clamp(1.5rem, 5vw, 3.2rem);
   line-height: 1.1;
 }
 
@@ -59,6 +61,7 @@ button {
   color: #ffffff;
   cursor: pointer;
   transition: all 0.25s ease;
+  min-height: 44px; /* Touch friendly */
 }
 button:hover {
   border-color: #16a34a;
@@ -67,6 +70,18 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Inputs responsivos */
+input, select, textarea {
+  font-size: 16px; /* Previne zoom no iOS */
+}
+
+@media (max-width: 480px) {
+  button {
+    padding: 0.5em 1em;
+    font-size: 0.9em;
+  }
 }
 
 @media (prefers-color-scheme: light) {
